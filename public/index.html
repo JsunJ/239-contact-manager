@@ -73,28 +73,28 @@
               <label for="full_name">Full name:</label>
             </dt>
             <dd>
-              <input type="text" id="full_name" name="full_name" placeholder="John Doe" value="{{fullName}}" required>
+              <input type="text" id="full_name" name="full_name" placeholder="John Doe" value="{{fullName}}" pattern="^([a-zA-Z']+)\s([a-zA-Z']+)$" required>
             </dd>
 
             <dt>
               <label for="email">Email address:</label>
             </dt>
             <dd>
-              <input type="text" id="email" name="email" placeholder="example@gmail.com" value="{{email}}"  required>
+              <input type="email" id="email" name="email" placeholder="example@gmail.com" value="{{email}}" pattern="^\S+@\S+$" required>
             </dd>
 
             <dt>
               <label for="phone_number">Telephone number:</label>
             </dt>
             <dd>
-              <input type="text" id="phone_number" name="phone_number" placeholder="000-000-0000" value="{{phoneNumber}}" required>
+              <input type="tel" id="phone_number" name="phone_number" placeholder="0000000000" value="{{phoneNumber}}" pattern="^\d{10}$" required>
             </dd>
 
             <dt>
               <label for="new_tag">Create a new tag to attach:</label>
             </dt>
             <dd>
-              <input type="text" id="new_tag" name="new_tag" placeholder="Enter tag text here">
+              <input type="text" id="new_tag" name="new_tag" placeholder="Enter tag text here (<= 14 characters)" pattern="^\S{1}.{0,12}\S$">
             </dd>
 
             <dt>
