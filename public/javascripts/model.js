@@ -97,7 +97,7 @@ export default class Model {
   getTagMatches(query) {
     return this.contacts.filter(contact => {
       let tags = contact.tags;
-      tags.map(tag => tag.toLowerCase());
+      tags = tags.map(tag => tag.toLowerCase());
       return tags.includes(query.toLowerCase());
     });
   }
@@ -120,7 +120,11 @@ export default class Model {
       tags: formData.getAll('tags').join(','),
     };
 
-    if (formData.get('new_tag')) obj.tags += `,${formData.get('new_tag')}`;
+    if (formData.get('new_tag') && obj.tags.length > 0) {
+      obj.tags += `,${formData.get('new_tag')}`;
+    } else if (formData.get('new_tag')) {
+      obj.tags += formData.get('new_tag');
+    }
 
     return obj;
   }
