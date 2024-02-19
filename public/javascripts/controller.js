@@ -10,20 +10,51 @@ export default class Controller {
     });
 
     //  Bindings
-    this.view.bindFormRequest();
+    this.view.bindFormRequest(this.handleFormRequest.bind(this));
     this.view.bindFormCancel(this.handleFormCancel.bind(this));
     this.view.bindAddEditContact(this.handleAddContact.bind(this),
       this.handleEditContact.bind(this));
     this.view.bindDeleteContact(this.handleDeleteContact.bind(this));
     this.view.bindSearchInputChange(this.handleSearchInputChange.bind(this));
+    this.view.bindTagClick(this.handleTagClick.bind(this));
+    this.view.bindTagFilterReset(this.handleTagFilterReset.bind(this));
+  }
+
+  // add a helper here
+  handleFormRequest(id) {
+    let contact;
+    let context;
+    let preSelections;
+
+    if (id) {
+      contact = this.model.contacts.filter(contact => {
+        return contact.id === parseInt(id, 10);
+      })[0];
+
+      preSelections = this.model.tags.filter(tag => {
+        return contact.tags.indexOf(tag) !== -1;
+      });
+    }
+
+    context = {
+      id: id ? id : '',
+      formHeader: id ? 'Edit Contact' : 'Create Contact',
+      formClass: id ? 'edit-form' : 'add-form',
+      fullName: id ? contact.fullName : '',
+      email: id ? contact.email : '',
+      phoneNumber: id ? contact.phoneNumber : '',
+      tags: this.model.tags,
+    };
+
+    this.view.drawContactForm(context, preSelections);
   }
 
   handleFormCancel() {
     this.view.drawContacts(this.model.contacts);
   }
 
-  handleAddContact(contactObj) {
-    this.model.addContact(contactObj).then(_ => {
+  handleAddContact(formData) {
+    this.model.addContact(formData).then(_ => {
       this.model.loadTags();
       this.view.drawContacts(this.model.contacts);
     });
@@ -36,8 +67,8 @@ export default class Controller {
     });
   }
 
-  handleEditContact(id, contactObj) {
-    this.model.editContact(id, contactObj).then(_ => {
+  handleEditContact(id, formData) {
+    this.model.editContact(id, formData).then(_ => {
       this.model.loadTags();
       this.view.drawContacts(this.model.contacts);
     });
@@ -45,15 +76,24 @@ export default class Controller {
 
   handleSearchInputChange(query) {
     if (query.length > 0) {
-      let matches = this.model.getMatches(query);
+      let matches = this.model.getNameMatches(query);
 
       if (matches.length === 0) {
         this.view.drawNoContactsFound(query);
       } else {
-        this.view.drawContacts(this.model.getMatches(query));
+        this.view.drawContacts(matches);
       }
     } else {
       this.view.drawContacts(this.model.contacts);
     }
+  }
+
+  handleTagClick(query) {
+    let matches = this.model.getTagMatches(query);
+    this.view.drawTagFilteredContacts(matches);
+  }
+
+  handleTagFilterReset() {
+    this.view.drawContacts(this.model.contacts);
   }
 }

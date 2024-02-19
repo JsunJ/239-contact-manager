@@ -3,9 +3,9 @@ export default class Model {
     this.contacts = [];
     // {
     //   id: 1,
-    //   fullName: "Victor Reyes",
-    //   email: "vpr@example.com",
-    //   phoneNumber: "09876543210",
+    //   fullName: "Jason Jones",
+    //   email: "jasonjones@gmail.com",
+    //   phoneNumber: "1234567890",
     //   tags: ["work", "friend"],
     // }
     this.tags = [];
@@ -24,12 +24,12 @@ export default class Model {
     }
   }
 
-  async addContact(contactObj) {
+  async addContact(formData) {
     try {
       let response = await fetch('/api/contacts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify(contactObj),
+        body: JSON.stringify(this._processContactForm(formData)),
       });
       let data = await response.json();
       this.contacts.push(this._processContact(data));
@@ -38,12 +38,17 @@ export default class Model {
     }
   }
 
-  async editContact(id, contactObj) {
+  // add a helper here
+  async editContact(id, formData) {
     try {
       let response = await fetch(`/api/contacts/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify(contactObj),
+        body: (() => {
+          let obj = this._processContactForm(formData);
+          obj.id = id;
+          return JSON.stringify(obj);
+        })(),
       });
       if (!response.ok) throw new Error('Bad request / Cannot find contact');
 
@@ -82,10 +87,18 @@ export default class Model {
     this.tags = Array.from(new Set(flatTags));
   }
 
-  getMatches(query) {
+  getNameMatches(query) {
     return this.contacts.filter(contact => {
       let name = contact.fullName.toLowerCase();
       return name.includes(query.toLowerCase());
+    });
+  }
+
+  getTagMatches(query) {
+    return this.contacts.filter(contact => {
+      let tags = contact.tags;
+      tags.map(tag => tag.toLowerCase());
+      return tags.includes(query.toLowerCase());
     });
   }
 
@@ -97,5 +110,18 @@ export default class Model {
       phoneNumber: contactData.phone_number,
       tags: contactData.tags ? contactData.tags.split(',') : [],
     };
+  }
+
+  _processContactForm(formData) {
+    let obj = {
+      full_name: formData.get('full_name'),
+      email: formData.get('email'),
+      phone_number: formData.get('phone_number'),
+      tags: formData.getAll('tags').join(','),
+    };
+
+    if (formData.get('new_tag')) obj.tags += `,${formData.get('new_tag')}`;
+
+    return obj;
   }
 }

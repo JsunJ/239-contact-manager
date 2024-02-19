@@ -118,6 +118,12 @@ header p {
   margin-bottom: 10px;
 }
 
+.contact-tag {
+  padding: 5px;
+  background-color: lightgray;
+  cursor: pointer;
+}
+
 .contact-form {
   margin: 0 auto;
   width: 800px;
@@ -144,13 +150,13 @@ header p {
 }
 
 .contact-form dt {
-  width: 25%;
+  width: 33%;
   text-align: end;
   margin-top: 25px;
 }
 
 .contact-form dd {
-  width: 60%;
+  width: 50%;
   margin-top: 20px;
   height: 30px;
 }
@@ -162,7 +168,6 @@ header p {
 }
 
 .form-actions-btn {
-  margin-top: 20px;
   width: 30%;
 }
 
@@ -172,4 +177,16 @@ header p {
 
 .cancel {
   margin-left: 20px;
+}
+
+.select-container {
+  margin-bottom: 100px;
+}
+
+select {
+  width: 100%;
+}
+
+.clear-filter {
+  font-weight: bold;
 }

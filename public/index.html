@@ -20,7 +20,6 @@
   <main>
     <div class="actions-container">
       <button class="btn actions-btn-lg add">Add Contact</button>
-      <button class="btn actions-btn-lg">View Tags</button>
       <input type="text" class="actions-search" placeholder="Search">
     </div>
 
@@ -53,7 +52,7 @@
         <dt>Tags:</dt>
         <dd class="tags-container">
           {{#each tags}}
-            <p>{{this}}</p>
+            <p class="contact-tag">{{this}}</p>
           {{/each}}
         </dd>
       </dl>
@@ -89,6 +88,24 @@
             </dt>
             <dd>
               <input type="text" id="phone_number" name="phone_number" placeholder="000-000-0000" value="{{phoneNumber}}" required>
+            </dd>
+
+            <dt>
+              <label for="new_tag">Create a new tag to attach:</label>
+            </dt>
+            <dd>
+              <input type="text" id="new_tag" name="new_tag" placeholder="Enter tag text here">
+            </dd>
+
+            <dt>
+              <label for="tags">Select existing tag(s) to attach:</label>
+            </dt>
+            <dd class="select-container">
+              <select name="tags" id="tags" size="4" multiple>
+                {{#each tags}}
+                  <option value="{{this}}">{{this}}</option>
+                {{/each}}
+              </select>
             </dd>
           </dl>
         </fieldset>

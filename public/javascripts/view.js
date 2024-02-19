@@ -14,6 +14,19 @@ export default class View {
 
   drawContacts(contacts) {
     this.$actionsContainer.css('display', 'flex');
+
+    if ($('.clear-filter')[0]) {
+      $('.clear-filter').replaceWith(
+        '<input type="text" class="actions-search" placeholder="Search">');
+    }
+
+    this.$contactsContainer.html(this.contactsTmpl({ contacts: contacts }));
+  }
+
+  drawTagFilteredContacts(contacts) {
+    $('.actions-search').replaceWith(
+      '<button class="btn actions-btn-lg clear-filter">*Clear Tag Filtering*</button>');
+
     this.$contactsContainer.html(this.contactsTmpl({ contacts: contacts }));
   }
 
@@ -21,39 +34,28 @@ export default class View {
     this.$contactsContainer.html(this.noContactsFoundTmpl(query));
   }
 
-  drawContactForm(context) {
-    if (!context) {
-      context = {
-        id: '',
-        formHeader: 'Create Contact',
-        formClass: 'add-form',
-        fullName: '',
-        email: '',
-        phoneNumber: '',
-      };
-    }
-
+  drawContactForm(context, preSelections) {
     this.$actionsContainer.css('display', 'none');
     this.$contactsContainer.html(this.contactFormTmpl(context));
+
+    if (preSelections) {
+      preSelections.forEach(option => {
+        $(`option[value="${option}"]`).prop('selected', true);
+      });
+    }
   }
 
-  bindFormRequest() {
+  bindFormRequest(handler) {
     $('main').on('click', 'button', event => {
       let $button = $(event.target);
 
       if ($button.hasClass('add')) {
-        this.drawContactForm();
+        handler();
       } else if ($button.hasClass('edit')) {
         let $contact = $button.closest('.contact');
+        let id = $contact.attr('data-id');
 
-        this.drawContactForm({
-          id: $contact.attr('data-id'),
-          formHeader: 'Edit Contact',
-          formClass: 'edit-form',
-          fullName: $contact.find('.contact-name').text(),
-          email: $contact.find('.contact-email').text(),
-          phoneNumber: $contact.find('.contact-number').text(),
-        });
+        handler(id);
       }
     });
   }
@@ -65,30 +67,17 @@ export default class View {
     });
   }
 
-  // eslint-disable-next-line max-lines-per-function
   bindAddEditContact(addHandler, editHandler) {
-    // eslint-disable-next-line max-lines-per-function
     this.$contactsContainer.on('submit', 'form', event => {
       event.preventDefault();
       let $form = $('form');
       let formData = new FormData($form[0]);
 
       if ($form.hasClass('add-form')) {
-        addHandler({
-          full_name: formData.get('full_name'),
-          email: formData.get('email'),
-          phone_number: formData.get('phone_number'),
-          tags: "",
-        });
+        addHandler(formData);
       } else if ($form.hasClass('edit-form')) {
         let contactId = $form.attr('data-id');
-        editHandler(contactId, {
-          id: contactId,
-          full_name: formData.get('full_name'),
-          email: formData.get('email'),
-          phone_number: formData.get('phone_number'),
-          tags: "",
-        });
+        editHandler(contactId, formData);
       }
     });
   }
@@ -109,6 +98,20 @@ export default class View {
     $input.on('input', _ => {
       let value = $input.val();
       handler(value);
+    });
+  }
+
+  bindTagClick(handler) {
+    this.$contactsContainer.on('click', 'p.contact-tag', event => {
+      let tagQuery = $(event.target).text();
+      handler(tagQuery);
+    });
+  }
+
+  bindTagFilterReset(handler) {
+    this.$actionsContainer.on('click', 'button.clear-filter', event => {
+      event.preventDefault();
+      handler();
     });
   }
 }
