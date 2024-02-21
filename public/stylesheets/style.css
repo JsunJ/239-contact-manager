@@ -138,7 +138,8 @@ header p {
 }
 
 .contact-form fieldset {
-  margin: 10px 0;
+  margin-top: 10px;
+  margin-bottom: 100px;
   padding: 0;
   border: none;
 }
@@ -167,6 +168,29 @@ header p {
   padding: 15px 10px;
 }
 
+.tag-selections-container {
+  height: 100px;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.tag-selection-container {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  border-bottom: 1px solid #555;
+}
+
+.tag-selection-container label {
+  width: 90%;
+  text-align: start;
+}
+
+.tag-selection-container input {
+  width: 10%;
+  height: 16px;
+}
+
 .form-actions-btn {
   width: 30%;
 }
@@ -177,14 +201,6 @@ header p {
 
 .cancel {
   margin-left: 20px;
-}
-
-.select-container {
-  margin-bottom: 100px;
-}
-
-select {
-  width: 100%;
 }
 
 .clear-filter {

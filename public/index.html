@@ -100,12 +100,15 @@
             <dt>
               <label for="tags">Select existing tag(s) to attach:</label>
             </dt>
-            <dd class="select-container">
-              <select name="tags" id="tags" size="4" multiple>
+            <dd>
+              <div class="tag-selections-container">
                 {{#each tags}}
-                  <option value="{{this}}">{{this}}</option>
+                  <div class="tag-selection-container">
+                    <label for="{{this}}">{{this}}</label>
+                    <input type="checkbox" id="{{this}}" name="tags" value="{{this}}">
+                  </div>
                 {{/each}}
-              </select>
+              </div>
             </dd>
           </dl>
         </fieldset>

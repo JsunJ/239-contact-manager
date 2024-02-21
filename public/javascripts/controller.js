@@ -90,10 +90,11 @@ export default class Controller {
 
   handleTagClick(query) {
     let matches = this.model.getTagMatches(query);
-    this.view.drawTagFilteredContacts(matches);
+    this.view.drawTagFilteredContacts(matches, query);
   }
 
   handleTagFilterReset() {
     this.view.drawContacts(this.model.contacts);
+    this.view.bindSearchInputChange(this.handleSearchInputChange.bind(this));
   }
 }

@@ -23,9 +23,13 @@ export default class View {
     this.$contactsContainer.html(this.contactsTmpl({ contacts: contacts }));
   }
 
-  drawTagFilteredContacts(contacts) {
-    $('.actions-search').replaceWith(
-      '<button class="btn actions-btn-lg clear-filter">*Clear Tag Filtering*</button>');
+  drawTagFilteredContacts(contacts, query) {
+    let $clearBtn = $(`<button class="btn actions-btn-lg clear-filter">Clear Tag Filtering: <strong>${query}</strong></button>`);
+    if ($('.actions-search')[0]) {
+      $('.actions-search').replaceWith($clearBtn[0]);
+    } else {
+      $('.clear-filter').html(`Clear Tag Filtering: <strong>${query}</strong>`);
+    }
 
     this.$contactsContainer.html(this.contactsTmpl({ contacts: contacts }));
   }
@@ -40,7 +44,7 @@ export default class View {
 
     if (preSelections) {
       preSelections.forEach(option => {
-        $(`option[value="${option}"]`).prop('selected', true);
+        $(`input[value="${option}"]`).prop('checked', true);
       });
     }
   }
